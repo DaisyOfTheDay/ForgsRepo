@@ -27,9 +27,7 @@ public class NewStaff : MonoBehaviour
     }
     [SerializeField] public Element element;
 
-    //[SerializeField] Animator anim;
     private float lastShootTime;
-    //private float timer;
     public bool isShooting;
     public bool canMelee;
     public GameObject weapon;
