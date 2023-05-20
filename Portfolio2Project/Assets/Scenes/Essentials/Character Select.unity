@@ -916,6 +916,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
     - target: {fileID: 8668668507354566521, guid: bc9f83b5016924b4da1e8d2bbc77daca, type: 3}
       propertyPath: staff
       value: 
@@ -932,6 +933,8 @@ PrefabInstance:
       propertyPath: waterPlayer
       value: 
       objectReference: {fileID: 212483767032429738, guid: e366eee6d86472548baafe3e005023f4, type: 3}
+=======
+>>>>>>> parent of ecf7e4e (Separated Player Prefabs)
 =======
 >>>>>>> parent of ecf7e4e (Separated Player Prefabs)
     - target: {fileID: 8668668507354566523, guid: bc9f83b5016924b4da1e8d2bbc77daca, type: 3}
