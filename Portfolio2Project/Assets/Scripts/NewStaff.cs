@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class NewStaff : MonoBehaviour
@@ -19,6 +20,10 @@ public class NewStaff : MonoBehaviour
     [SerializeField] Collider hitbox;
     [SerializeField] private Renderer sWeapon;
 
+
+    [SerializeField] GameObject player;
+
+    Animator anim;
     public enum Element
     {
         Fire,
@@ -27,9 +32,7 @@ public class NewStaff : MonoBehaviour
     }
     public Element element;
 
-    //[SerializeField] Animator anim;
     private float lastShootTime;
-    //private float timer;
     public bool isShooting;
     public bool canMelee;
     public GameObject weapon;
@@ -39,11 +42,13 @@ public class NewStaff : MonoBehaviour
     {
         hitbox.enabled = false;
         sWeapon.enabled = false;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (isAttacking)
         {
             sWeapon.enabled = true;
@@ -116,6 +121,22 @@ public class NewStaff : MonoBehaviour
 
     }
 
+    public void ChangeElement(string elementSelected)
+    {
+        if (elementSelected == "Fire")
+        {
+            element = Element.Fire;
+        }
+        else if (elementSelected == "Water")
+        {
+            element = Element.Water;
+        }
+        else if (elementSelected == "Earth")
+        {
+            element = Element.Earth;
+        }
+    }
+
     public void Melee()
     {
         if (!canMelee)
@@ -129,7 +150,7 @@ public class NewStaff : MonoBehaviour
             isAttacking = true;
             hitbox.enabled = true;
             canMelee = false;
-            Animator anim = weapon.GetComponent<Animator>();
+            anim = weapon.GetComponent<Animator>();
             switch (element)
             {
                 case Element.Fire:
