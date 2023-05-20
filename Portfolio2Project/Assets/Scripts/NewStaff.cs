@@ -30,7 +30,7 @@ public class NewStaff : MonoBehaviour
         Water,
         Earth
     }
-    [SerializeField] public Element element;
+    public Element element;
 
     private float lastShootTime;
     public bool isShooting;
@@ -61,7 +61,7 @@ public class NewStaff : MonoBehaviour
         Melee();
     }
 
-    public void Shoot(float shootRate)
+    public void Shoot()
     {
 
         if (Input.GetButton("Shoot"))

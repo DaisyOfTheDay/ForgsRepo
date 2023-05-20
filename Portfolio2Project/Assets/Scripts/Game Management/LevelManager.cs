@@ -2,185 +2,95 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [Header("-----Components-----")]
-    [SerializeField] Animator doorAnim;
-    [SerializeField] GameObject doorLight;
+    [Header("----- LevelIndexes -----")]
+    [SerializeField] int repeatableLevelsMinIndex; //list levels contiguously
+    [SerializeField] int repeatableLevelsMaxIndex;
 
+    int currentLevelIndex;
+    int lastLevelIndex;
 
-    [Header("-----Levels------")]
-    [SerializeField] Transform tutorialLevel;
-    [SerializeField] Transform[] levelPrefabs;
+    public static LevelManager instance;
 
-    [Header("-----Balance-----")]
-    [Range(5,30)][SerializeField] int baseEnemyCount = 10;
-    [Range(0,1)][SerializeField] float byLevelMultiplier;
-    int totalEnemies;
-    int currEnemies;
-    int enemiesKilled;
+    public int currentLevel;
+    public int enemiesRemaining;
 
-    [Header("-----Misc------")]
-    [SerializeField] Material lightOnMat;
-    public bool isInLevel;
-    public int level = 0;
+    public bool inElevator; //player is in elevator
+    public bool levelStarted; //player successfully teleported/close enough to spawn
+    public bool levelCompleted; //for use by other scripts, makes life easier -> if levelStarted, no enemies, and player in elevator -> load new level
 
-    Material lightOffMat;
-    bool levelIsComplete = true;
-    bool inElevator;
-    Transform currLevel;
-    Coroutine activeCoroutine;
+    public bool loadingLevel;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        instance = this;
+        DontDestroyOnLoad(this.gameObject);
+    }
     void Start()
     {
-        Debug.Log("Elevator Start Ran");
-        if (doorLight != null)
-        {
-            lightOffMat = doorLight.GetComponent<MeshRenderer>().material;
-        }
+        NewGame();
     }
 
-    public int getlevel() 
-    { 
-        return level;
-    }
-
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-
-        if (other.CompareTag("Player") && !inElevator) 
+        if (loadingLevel == false)
         {
-            if (levelIsComplete)
-            {
-                inElevator= true;
-                activeCoroutine = StartCoroutine(nextLevelCoroutine());
-            }
-            else
-            {
-                if (doorAnim != null)
-                {
-                    doorAnim.SetBool("Open", true);
-                }
-            }
-
+            LevelCompletionTracker();
         }
-
 
     }
-
-    private void OnTriggerExit(Collider other)
+    
+    public void NewGame()
     {
-        if (other.CompareTag("Player"))
-        {
-            if (levelIsComplete)
-            {
-                StopCoroutine(activeCoroutine);
-
-            }
-            else
-            {
-                if (doorAnim != null)
-                {
-                    doorAnim.SetBool("Open", false);
-                }
-            }
-            inElevator = false;
-        }
-
-
+        loadingLevel = false;
+        levelCompleted = false;
+        levelStarted = false;
+        currentLevel = 1;
+        currentLevelIndex = 2;
+        lastLevelIndex = 2;
+        enemiesRemaining = 0;
+        inElevator = false;
     }
 
-    public void levelComplete()
+    public void LevelCompletionTracker()
     {
-        if (!levelIsComplete)
+        if (levelStarted == true && enemiesRemaining <= 0) //if level is started and all enemies are dead level is considered completed
         {
-            if (doorLight != null)
+            Debug.Log("levelStarted True + enemies < 0");
+            levelCompleted = true;
+            if (inElevator == true) //if level is completed and player enters elevator go to next level
             {
-                doorLight.GetComponent<MeshRenderer>().material = lightOnMat;
+                GoToNextLevel();
             }
-            levelIsComplete = true;
-            if (doorAnim != null)
-            {
-                doorAnim.SetBool("Open", true);
-            }
-        }
-    }
-
-    IEnumerator nextLevelCoroutine()
-    {
-
-        isInLevel = false;
-        yield return new WaitForSeconds(2);
-        if (doorAnim != null)
-        {
-            doorAnim.SetBool("Open", false);
-        }
-        yield return new WaitForSeconds(4);
-        if (currLevel != null)
-        {
-            Destroy(currLevel.gameObject);
-        }
-        loadLevel();
-        levelIsComplete = false;
-        yield return new WaitForSeconds(1);
-        if (doorAnim != null)
-        {
-            doorAnim.SetBool("Open", true);
-        }
-        if (doorLight != null)
-        {
-            doorLight.GetComponent<MeshRenderer>().material = lightOffMat;
-        }
-
-        isInLevel = true;
-        StopCoroutine(nextLevelCoroutine());
-    }
-
-    void loadLevel()
-    {
-        totalEnemies = scaledDifficulty();
-        if (level == 0)
-        {
-            currLevel = Instantiate(tutorialLevel,transform,false);
-            NavMeshSurface sf = currLevel.GetComponent<NavMeshSurface>();
-            sf.BuildNavMesh();
-            level++;
         }
         else
         {
-            int rand = Random.Range(0, levelPrefabs.Length);
-            currLevel = Instantiate(levelPrefabs[rand],transform,false);
-            currLevel.SetParent(transform);
-            level++;
+            levelCompleted = false;
         }
-        gameManager.instance.updateLevelCount();
-
     }
-
-    int scaledDifficulty()
+    public void GoToNextLevel() //if levelStarted, no enemies, and player in elevator -> load new level
     {
-        return (int)Mathf.Round(baseEnemyCount * (1 +(level * byLevelMultiplier)));
-    }
-
-
-    public bool currLessThanTotal()
-    {
-        return currEnemies < totalEnemies;
-    }
-
-    public void addCurr()
-    {
-        currEnemies++;
-    }
-
-    public void enemyKill()
-    {
-        enemiesKilled++;
-        if (enemiesKilled >= totalEnemies)
+        if (loadingLevel == false)
         {
-            levelComplete();
+            loadingLevel = true;
+            levelCompleted = false;
+            levelStarted = false;
+            enemiesRemaining = 0;
+            inElevator = false;
+            lastLevelIndex = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(GetRandomLevelIndex()); //loads a new level != the current level index
+            SceneManager.UnloadSceneAsync(lastLevelIndex);
+            ++currentLevel; //ups difficulty
         }
+    }
+
+    public int GetRandomLevelIndex()
+    {
+        int randomIndex = Random.Range(repeatableLevelsMinIndex, repeatableLevelsMaxIndex + 1);
+        Debug.Log($"Random Index is {randomIndex}");
+        return randomIndex;
     }
 }
