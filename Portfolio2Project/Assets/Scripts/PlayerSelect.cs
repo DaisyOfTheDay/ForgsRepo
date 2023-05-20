@@ -8,10 +8,12 @@ using UnityEngine.SceneManagement;
 public class PlayerSelect : MonoBehaviour
 {
     [SerializeField] GameObject player;
+    [SerializeField] NewStaff staff;
     public void SelectedFire()
     {
         Instantiate(player);
-        player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Fire;
+        staff.ChangeElement("Fire");
+        Debug.Log("Selected Fire");
         Debug.Log("PlayerSpawned");
         SceneManager.LoadScene("Main Game");
     }
@@ -20,6 +22,7 @@ public class PlayerSelect : MonoBehaviour
     {
         Instantiate(player);
         player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Water;
+        Debug.Log("Selected Water");
         Debug.Log("PlayerSpawned");
         SceneManager.LoadScene("Main Game");
     }
@@ -27,7 +30,9 @@ public class PlayerSelect : MonoBehaviour
     public void SelectedEarth()
     {
         Instantiate(player);
-        player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Earth;
+        staff.ChangeElement("Earth");
+        //player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Earth;
+        Debug.Log("Selected Earth");
         Debug.Log("PlayerSpawned");
         SceneManager.LoadScene("Main Game");
     }
