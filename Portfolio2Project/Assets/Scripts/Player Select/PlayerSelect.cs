@@ -7,29 +7,22 @@ using UnityEngine.SceneManagement;
 
 public class PlayerSelect : MonoBehaviour
 {
-    [Header("----- Element Type Player Prefabs -----")]
-    [SerializeField] GameObject firePlayer;
-    [SerializeField] GameObject waterPlayer;
-    [SerializeField] GameObject earthPlayer;
-
-    [Header("----- Other Necessary Objects -----")]
+    [SerializeField] GameObject player;
+    [SerializeField] NewStaff staff;
     [SerializeField] GameObject levelManager;
     [SerializeField] GameObject UI;
-
-    [Header("----- Do Not Fill/Filled By Script -----")]
-    public GameObject player;
     public void SelectedFire()
     {
         PrePlayerElementSetup();
-        Instantiate(firePlayer);
-        Debug.Log("Selected Fire");
+        staff.ChangeElement("Fire");
+        player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Fire;
         PostPlayerElementSetup();
     }
 
     public void SelectedWater()
     {
         PrePlayerElementSetup();
-        Instantiate(waterPlayer);
+        //player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Water;
         Debug.Log("Selected Water");
         PostPlayerElementSetup();
     }
@@ -37,20 +30,24 @@ public class PlayerSelect : MonoBehaviour
     public void SelectedEarth()
     {
         PrePlayerElementSetup();
-        Instantiate(earthPlayer);
+        staff.ChangeElement("Earth");
         Debug.Log("Selected Earth");
+        player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Earth;
+        //player.GetComponent<PlayerController>().playerWeaponScript.element = NewStaff.Element.Earth;
         PostPlayerElementSetup();
     }
 
     public void PrePlayerElementSetup() //must happen before player element setup occurs
     {
         DestroyImmediate(Camera.main.gameObject);
+        Instantiate(player);
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log("Player Spawned");
     }
 
     public void PostPlayerElementSetup() //must happen after player element setup occurs
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log("Player Spawned");
+
         Instantiate(levelManager);
         Debug.Log("Level Manager Created");
         Instantiate(UI);
