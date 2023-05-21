@@ -14,6 +14,7 @@ public class EnemySpawner : MonoBehaviour
     int currentNumberSpawned;
     public bool playerInRange;
     bool isSpawning;
+    // Update is called once per frame
     void Update()
     {
         if ((playerInRange || spawnsOnLevelLoad) && !isSpawning && currentNumberSpawned < numberToSpawn)
@@ -28,14 +29,8 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnLoacations != null)
         {
-            if(spawnLoacations.Length > 1)
-            {
-                SpawnEnemy(spawnLoacations[Random.Range(0, spawnLoacations.Length)]);
-            }
-            else
-            {
-                SpawnEnemy(spawnLoacations[0]);
-            }
+            Transform spawnLocation = spawnLoacations[Random.Range(0, spawnLoacations.Length)];
+            SpawnEnemy(spawnLocation);
         }
         else
         {
