@@ -337,7 +337,8 @@ MonoBehaviour:
   meleeCooldown: 0.5
   hitbox: {fileID: 334106367046308164}
   sWeapon: {fileID: 6853015764813239609}
-  element: 1
+  weapons: []
+  element: 0
   isShooting: 0
   canMelee: 1
   weapon: {fileID: 4055193228901778526}
@@ -756,7 +757,7 @@ MonoBehaviour:
   damagecoolDown: 0.1
   ShootRange: 355
   ShotCooldown: 0.1
-  playerWeaponScript: {fileID: 1997322673939326998, guid: 7f66119c5d79c5c4c8a6262c233f2d9f, type: 3}
+  playerWeaponScript: {fileID: 334106367046308170}
 --- !u!114 &1055786313974128500
 MonoBehaviour:
   m_ObjectHideFlags: 0
