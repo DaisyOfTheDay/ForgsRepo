@@ -6,15 +6,14 @@ using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
-    LevelManager levelManager;
-
     [Header("----- Components -----")]
     [SerializeField] Renderer rModel;
     [SerializeField] NavMeshAgent navAgent;
     [SerializeField] Transform tShootPos;
     [SerializeField] Transform tHeadPos;
     [SerializeField] GameObject drop;
-    [SerializeField] Animator anim;    
+    LevelManager lm;
+    
 
     [Header("----- Enemy Stats -----")]
     [SerializeField] int iHP;
@@ -24,7 +23,6 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] float fFieldOfView;
     [SerializeField] float fChaseTime;
     [Range(0, 100)][SerializeField] int DropRate;
-    [SerializeField] float animTransSpeed;
 
     [Header("----- Weapon Stats -----")]
     [SerializeField] GameObject gOBullet;
@@ -39,34 +37,24 @@ public class EnemyAI : MonoBehaviour, IDamage
     Vector3 playerDir;
     float fAngleToPlayer;
 
-    //IDamage damageInterface;
+    IDamage damageInterface;
     private Color cOrigColor;
     
     void Start()
     {
-        levelManager = LevelManager.instance;
-        ++levelManager.enemiesRemaining;
-
         cOrigColor = rModel.material.color;
-        
+        ++gameManager.instance.enemiesRemaining;
         hpBar.maxValue = iHP;
         hpBar.value = hpBar.maxValue;
+        lm = GetComponentInParent<LevelManager>();
     }
 
 
     void Update()
     {
-        if (anim != null)
-        {
-            float speed = 0;
-            speed = Mathf.Lerp(speed, navAgent.velocity.normalized.magnitude, Time.deltaTime * animTransSpeed);
-            anim.SetFloat("Speed", speed);
-        }
-
-
         if (hpDisplay.activeSelf)
         {
-            hpDisplay.transform.LookAt(GameManager.instance.player.transform.position);
+            hpDisplay.transform.LookAt(gameManager.instance.player.transform.position);
         }
         if((bPlayerInRange || bBeenShot) && CanSeePlayer())
         {
@@ -76,13 +64,14 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     bool CanSeePlayer()
     {
-        playerDir = GameManager.instance.player.transform.position - tHeadPos.position;
+        playerDir = gameManager.instance.player.transform.position - tHeadPos.position;
         fAngleToPlayer = Vector3.Angle(new Vector3(playerDir.x, 0, playerDir.z), transform.forward);
 
         Debug.DrawRay(tHeadPos.position, playerDir);
         //Debug.Log(fAngleToPlayer);
 
-        if(Physics.Raycast(tHeadPos.position, playerDir, out RaycastHit hit))
+        RaycastHit hit;
+        if(Physics.Raycast(tHeadPos.position, playerDir, out hit))
         {
             if (hit.collider.CompareTag("Player") && fAngleToPlayer <= fFieldOfView)
             {
@@ -103,7 +92,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void AttackPlayer()
     {
-        navAgent.SetDestination(GameManager.instance.player.transform.position);
+        navAgent.SetDestination(gameManager.instance.player.transform.position);
         if (navAgent.remainingDistance < navAgent.stoppingDistance)
         {
             //Debug.Log("YARGH");
@@ -119,8 +108,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     IEnumerator Shoot(){
         bIsShooting = true;//tell update that this is running
         Instantiate(gOBullet, transform.position, transform.rotation);//create bullet
-        anim.SetTrigger("Attack");//play the shooting animation
-
+        
         yield return new WaitForSeconds(fShootRate);//cooldown
         bIsShooting = false;//tell update that we're ready to shoot again
     }
@@ -128,19 +116,20 @@ public class EnemyAI : MonoBehaviour, IDamage
     public void TakeDamage(int dmg)
     {
         iHP -= dmg;//health goes down
-        StartCoroutine(ShowHealth());
+        StartCoroutine(showHealth());
         hpBar.value = iHP;
-        StartCoroutine(FlashColor());//indicate damage taken
-        navAgent.SetDestination(GameManager.instance.player.transform.position);
-        StartCoroutine(BeenShot());
+        StartCoroutine(flashColor());//indicate damage taken
+        navAgent.SetDestination(gameManager.instance.player.transform.position);
+        BeenShot();
 
         if(iHP <= 0) //if it dies, get rid of it
         {
-            if(Random.Range(0,100) <= DropRate && drop != null)
+            if(Random.Range(0,100) <= DropRate)
             {
-                Instantiate(drop, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), transform.rotation);
+             Instantiate(drop, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), transform.rotation);
             }
-            --levelManager.enemiesRemaining;
+            --gameManager.instance.enemiesRemaining;
+            lm.enemyKill();
             Destroy(gameObject);
         }
     }
@@ -152,7 +141,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         bBeenShot = false;
     }
 
-    IEnumerator FlashColor()
+    IEnumerator flashColor()
     {//when it, change the color of the enemy from whatever it was to red, and back again
         rModel.material.color = Color.red;
 
@@ -161,7 +150,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         rModel.material.color = cOrigColor;
     }
 
-    IEnumerator ShowHealth()
+    IEnumerator showHealth()
     {
         hpDisplay.SetActive(true);
 

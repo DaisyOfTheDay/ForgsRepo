@@ -35,10 +35,10 @@ public class PlayerController : MonoBehaviour, IDamage
     bool isShooting;
 
     //[SerializeField] GameObject playerWeaponHolder;
-    public NewStaff playerWeaponScript;
+    [SerializeField] public NewStaff playerWeaponScript;
 
 
-    //GameObject playerWeapon;
+    GameObject playerWeapon;
 
     // Start is called before the first frame update
     private void Awake()
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
         Sprint();
 
-        if (Input.GetButton("Shoot") && !isShooting && !GameManager.instance.isPaused)
+        if (Input.GetButton("Shoot") && !isShooting && !gameManager.instance.isPaused)
         {
             StartCoroutine(Shoot());
 
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour, IDamage
         }
 
         move = (transform.right * Input.GetAxis("Horizontal")) + (transform.forward * Input.GetAxis("Vertical"));
-        controller.Move(move * playerSpeed * Time.deltaTime);
+        controller.Move(move * Time.deltaTime * playerSpeed);
 
 
 
@@ -128,17 +128,17 @@ public class PlayerController : MonoBehaviour, IDamage
         if (damagedRecently == false)
         {
             damagedRecently = true;
-            StartCoroutine(ResetDamagedRecently());
+            StartCoroutine(resetDamagedRecently());
             Debug.Log("my damage" + amount);
             //-= used, negative amounts heal.         
             iHP -= amount;
             if (amount > 0)
             {
-                GameManager.instance.ShowDamage();
+                gameManager.instance.showDamage();
                 if (iHP <= 0)
                 {
                     iHP = 0;
-                    GameManager.instance.YouLose();
+                    gameManager.instance.youLose();
                 }
             }
             else
@@ -148,11 +148,11 @@ public class PlayerController : MonoBehaviour, IDamage
                     iHP = iHPOriginal;
                 }
             }
-            GameManager.instance.UpdateHealthBar();
+            gameManager.instance.UpdateHealthBar();
         }
     }
 
-    IEnumerator ResetDamagedRecently()
+    IEnumerator resetDamagedRecently()
     {
         yield return new WaitForSeconds(damagecoolDown);
         damagedRecently = false;
@@ -165,19 +165,22 @@ public class PlayerController : MonoBehaviour, IDamage
             Debug.Log("Shot");
             isShooting = true;
 
+            RaycastHit hit;
+
             if (playerWeaponScript != null)
-                playerWeaponScript.Shoot();
+                playerWeaponScript.Shoot(ShotCooldown);
            /* else if (waterWeapon != null)
                 waterWeapon.Shoot(ShotCooldown);
             else if (earthWeapon != null)
                 earthWeapon.Shoot(ShotCooldown);*/
 
-            if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f)), out RaycastHit hit, ShootRange))
+            if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f)), out hit, ShootRange))
             //if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward * ShootRange, out hit))
             {
                 IDamage damageable = hit.collider.GetComponent<IDamage>();
                 if (damageable != null)
                 {
+
                     damageable.TakeDamage(2);
                 }
             }
@@ -190,32 +193,32 @@ public class PlayerController : MonoBehaviour, IDamage
     }
 
 
-    //public void spawnPlayer()
-    //{
-    //    controller.enabled = false;
-    //    transform.position = gameManager.instance.playerSpawn.transform.position;
-    //    iHP = iHPOriginal;
-    //    gameManager.instance.ResetHpBar();
-    //    controller.enabled = true;
-    //}
+    public void spawnPlayer()
+    {
+        controller.enabled = false;
+        transform.position = gameManager.instance.playerRespawn.transform.position;
+        iHP = iHPOriginal;
+        gameManager.instance.ResetHpBar();
+        controller.enabled = true;
+    }
 
-    public int GetHealth()
+    public int getHealth()
     {
         return iHP;
     }
 
-    public int GetOriginalHealth()
+    public int getOriginalHealth()
     {
         return iHPOriginal;
     }
 
-    public void ChangeJumpsUsed(int ammount)
+    public void changeJumpsUsed(int ammount)
     {
         jumpsUsed += ammount;
     }
 
     //Changer Gravity and Returns Original Gravity
-    public float ChangeGravity(float ammount)
+    public float changeGravity(float ammount)
     {
         float gravityOrig = gravityValue;
         gravityValue = ammount;

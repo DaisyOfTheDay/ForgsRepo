@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 2525cbdebe3596c45987a34a18031a3c
+=======
+guid: 27010a1f3acaf2248b82aca2739c5944
+>>>>>>> parent of c00a217 (Moved Player prefab to different folder)
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

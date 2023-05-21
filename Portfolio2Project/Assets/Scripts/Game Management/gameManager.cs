@@ -7,16 +7,21 @@ using UnityEngine.SceneManagement;
 using static Skills;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class gameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static gameManager instance;
 
     [Header("------ Player Stuff -----")]
 
     public GameObject player;
     public PlayerController playerScript;
+    public GameObject playerRespawn;
     public GameObject playerSpawn;
     public Skills skillScript;
+    /*public GameObject firePlayer;
+    public GameObject waterPlayer;
+    public GameObject earthPlayer;*/
+
 
     [Header("----- UI Stuff -----")]
     public GameObject pauseMenu;
@@ -26,19 +31,20 @@ public class GameManager : MonoBehaviour
     public GameObject settingsMenu;
     public GameObject flashDamage;
     public GameObject inventoryMenu;
-    public Image fadeInFadeOutImage;
-    public Slider hpBar;
-    public Text hpText;
-    public TextMeshProUGUI levelText;
+    
+    [Header("----- Enemy Stuff -----")]
+    public int enemiesRemaining;
 
     [Header("-----Misc Stuff-----")]
 
+    [SerializeField] Slider hpBar;
+    [SerializeField] Text hpText;
+    [SerializeField] TextMeshProUGUI levelText;
     LevelManager levelManager;
-
-
     public Image ability1; //Hi-Jump
     public Image ability2; //Dash
     public Image ability3; //Blink
+    public Image fadeOutImage;
     public List<Sprite> spriteArray;
     public Image element;
 
@@ -53,29 +59,31 @@ public class GameManager : MonoBehaviour
         timeScaleOrig = Time.timeScale;
         playerScript = player.GetComponent<PlayerController>();
         skillScript = player.GetComponent<Skills>();
-        levelManager = LevelManager.instance;
+        //playerRespawn = GameObject.FindGameObjectWithTag("PlayerRespawn");
+        levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
         ResetHpBar();
-    }
-
-    private void Start()
-    {
         SetElementIcon();
+        enemiesRemaining = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //SetElementIcon();
+        SetElementIcon();
         if (Input.GetButtonDown("Cancel") && activeMenu == null)
         {
             activeMenu = pauseMenu;
-            ShowActiveMenu();
-            PauseState();
+            showActiveMenu();
+            pauseState();
         }
-        AbilityCoolDown();
+        if (instance.enemiesRemaining <= 0 && levelManager.isInLevel)
+        {
+            levelManager.levelComplete();
+        }
+        abilityCooldown();
     }
 
-    public void PauseState()
+    public void pauseState()
     {
         isPaused = true;
         Time.timeScale = 0;
@@ -85,37 +93,37 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void UnpauseState()
+    public void unPauseState()
     {
         isPaused = false;
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        HideActiveMenu();
+        hideActiveMenu();
     }
-    public void GoBack() //Go back to pause menu
+    public void goBack() //Go back to pause menu
     {
-        PauseState();
+        pauseState();
         settingsMenu.SetActive(false);
         activeMenu = pauseMenu;
-        ShowActiveMenu();
+        showActiveMenu();
     }
 
-    public void YouLose()
+    public void youLose()
     {
-        PauseState();
+        pauseState();
         activeMenu = loseMenu;
-        ShowActiveMenu();
+        showActiveMenu();
     }
 
-    public void GoToSettings() //goes to settings menu
+    public void goToSettings() //goes to settings menu
     {
-        PauseState();
+        pauseState();
         activeMenu = settingsMenu;
-        ShowActiveMenu();
+        showActiveMenu();
     }
 
-    public void ShowActiveMenu() //shows active menu if there is one.
+    public void showActiveMenu() //shows active menu if there is one.
     {
         if (activeMenu != null)
         {
@@ -123,7 +131,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void HideActiveMenu() //hides active menu and sets it to null
+    public void hideActiveMenu() //hides active menu and sets it to null
     {
         if (activeMenu != null)
         {
@@ -132,22 +140,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShowDamage()
+    public void showDamage()
     {
-        StartCoroutine(FlashRed());
+        StartCoroutine(flashRed());
     }
 
-    IEnumerator FlashRed()
+    IEnumerator flashRed()
     {
         flashDamage.SetActive(true);
         yield return new WaitForSeconds(0.3f);
         flashDamage.SetActive(false);
     }
-    public void YouWin()
+    public void youWin()
     {
         activeMenu = winMenu;
-        ShowActiveMenu();
-        PauseState();
+        showActiveMenu();
+        pauseState();
     }
  
     //displays the correct element based on character type
@@ -159,25 +167,25 @@ public class GameManager : MonoBehaviour
 
     public void UpdateHealthBar()
     {
-        hpBar.maxValue = playerScript.GetOriginalHealth();
-        hpBar.value = playerScript.GetHealth();
-        if (playerScript.GetHealth() <= 0)
+        hpBar.maxValue = playerScript.getOriginalHealth();
+        hpBar.value = playerScript.getHealth();
+        if (playerScript.getHealth() <= 0)
         {
             hpText.text = "HP: 0";
         }
         else
         {
-            hpText.text = "HP: " + playerScript.GetHealth();
+            hpText.text = "HP: " + playerScript.getHealth();
         }
     }
     //update level counter in UI
-    public void UpdateLevelCount()
+    public void updateLevelCount()
     {
-        int level = levelManager.currentLevel;
+        int level = levelManager.getlevel();
         levelText.text = level.ToString("F0");
     }
     //cooldownImage
-    public void AbilityCoolDown()
+    public void abilityCooldown()
     {
         if(skillScript.isDashCooldown())
         {
@@ -209,22 +217,26 @@ public class GameManager : MonoBehaviour
             ability2.fillAmount = 0;
             ability3.fillAmount = 0;
         }
+
+
     }
 
     public void ResetHpBar()
     {
+        //hpBar.maxValue = playerScript.getOriginalHealth();
+        //hpBar.value = playerScript.getHealth();
         hpBar.maxValue = 1;
         hpBar.value = 1;
-        hpText.text = "HP: " + playerScript.GetHealth();
+        hpText.text = "HP: " + playerScript.getHealth();
     }
 
-    public IEnumerator FadeScreen(bool toFade)
+    IEnumerator fadeScreen(bool toFade)
     {
        if(toFade)   //Fade into level
         {
             for(float i = 1; i>=0;i-=Time.deltaTime)
             {
-                fadeInFadeOutImage.color = new Color(0, 0, 0, i);
+                fadeOutImage.color = new Color(1, 1, 1, i);
                 yield return null;
             }
         }
@@ -232,9 +244,45 @@ public class GameManager : MonoBehaviour
         {
             for (float i = 0; i <= 1; i += Time.deltaTime)
             {
-                fadeInFadeOutImage.color = new Color(0, 0, 0, i);
+                fadeOutImage.color = new Color(1, 1, 1, i);
                 yield return null;
             }
         }
     }
+
+    //public void StartGame()
+    //{
+    //    player = GameObject.FindGameObjectWithTag("Player");
+    //    //Looking for which element the player has
+    //    waterPlayer = GameObject.Find("Water Player");
+    //    firePlayer = GameObject.Find("Fire Player");
+    //    earthPlayer = GameObject.Find("Earth Player");
+    //    timeScaleOrig = Time.timeScale;
+    //    playerScript = player.GetComponent<PlayerController>();
+    //    playerRespawn = GameObject.FindGameObjectWithTag("PlayerRespawn");
+    //    levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+    //    ResetHpBar();
+    //    SetElementIcon();
+    //    enemiesRemaining = 0;
+    //    gameStarted = true;
+    //}
+
+    //public void SelectedFire()
+    //{
+    //    SceneManager.LoadScene("Main Game");
+    //    playerSpawn = GameObject.FindGameObjectWithTag("Player Spawn");
+    //    playerType = Instantiate(playerTypeFire);
+    //    playerType.transform.SetPositionAndRotation(playerSpawn.transform.position, playerSpawn.transform.rotation);
+    //    StartGame();
+    //}
+
+    //public void SelectedWater()
+    //{
+
+    //}
+
+    //public void SelectedEarth()
+    //{
+
+    //}
 }
