@@ -124,13 +124,22 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         if(iHP <= 0) //if it dies, get rid of it
         {
+<<<<<<< HEAD
             if(Random.Range(0,100) <= DropRate)
+=======
+            anim.SetTrigger("Died");//play the death animation
+            if (Random.Range(0,100) <= DropRate && drop != null)
+>>>>>>> branchworks
             {
              Instantiate(drop, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), transform.rotation);
             }
             --gameManager.instance.enemiesRemaining;
             lm.enemyKill();
             Destroy(gameObject);
+        }
+        else 
+        {
+            anim.SetTrigger("GetHit");//play the hurt animation
         }
     }
 

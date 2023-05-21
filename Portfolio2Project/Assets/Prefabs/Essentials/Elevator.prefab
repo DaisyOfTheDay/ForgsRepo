@@ -1,49 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &97243433042328967
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1373198078074388762}
-  - component: {fileID: 4180910290044777530}
-  m_Layer: 0
-  m_Name: Player Spawn
-  m_TagString: PlayerSpawn
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1373198078074388762
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 97243433042328967}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4260260368125024736}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4180910290044777530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 97243433042328967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dfdb68dc64c8ce40b8e423b19c8b923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4260260368043274828
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,8 +321,7 @@ Transform:
   m_LocalPosition: {x: 0.041000172, y: -0.07782725, z: -1.502023}
   m_LocalScale: {x: 3.1502075, y: 0.10923, z: 2.8177454}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1373198078074388762}
+  m_Children: []
   m_Father: {fileID: 4260260368231988676}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1182,12 +1137,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4260260369507079296}
-  - component: {fileID: 4260260369507079309}
+  - component: {fileID: 5136022731320389872}
   - component: {fileID: 4260260369507079310}
-  - component: {fileID: 4260260369507079311}
+  - component: {fileID: 9082040868397576144}
   m_Layer: 0
-  m_Name: Elevator
-  m_TagString: LevelManager
+  m_Name: ElevatorBox
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1201,7 +1156,7 @@ Transform:
   m_GameObject: {fileID: 4260260369507079297}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.77256626, y: 0.77256626, z: 0.77256626}
+  m_LocalScale: {x: 0.72, y: 0.72, z: 0.72}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4260260368467271749}
@@ -1210,7 +1165,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4260260369507079309
+--- !u!114 &5136022731320389872
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1219,20 +1174,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4260260369507079297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be933e967a632be41bd7b964abbd7373, type: 3}
+  m_Script: {fileID: 11500000, guid: 767cd711b010f7048b21fe89756cb62c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorAnim: {fileID: 4260260368467271750}
-  doorLight: {fileID: 4260260368043274828}
-  tutorialLevel: {fileID: 6509155909279955374, guid: d80e1a2fe2f8f1949b26aaa7b8faa74f, type: 3}
-  levelPrefabs:
-  - {fileID: 8878911403180767278, guid: e2bb3a2e5c274c54a8300664c28b48ea, type: 3}
-  - {fileID: 5196440058152316769, guid: 6daaebc8f2c48bd4c9e79730956a3c1d, type: 3}
-  baseEnemyCount: 10
-  byLevelMultiplier: 0
-  lightOnMat: {fileID: 2100000, guid: dc2e9e5e7f017a049b294245d3505f4d, type: 2}
-  isInLevel: 0
-  level: 0
+  door1: {fileID: 4260260368099422775}
+  door2: {fileID: 4260260369093500702}
+  levelManager: {fileID: 0}
 --- !u!54 &4260260369507079310
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1249,7 +1196,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4260260369507079311
+--- !u!65 &9082040868397576144
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1260,5 +1207,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.4736712, y: 4.5412984, z: 2.30895}
-  m_Center: {x: 1.9234396e-13, y: 2.140239, z: -1.6104176}
+  m_Size: {x: 2, y: 3, z: 2}
+  m_Center: {x: 0, y: 2, z: -1}

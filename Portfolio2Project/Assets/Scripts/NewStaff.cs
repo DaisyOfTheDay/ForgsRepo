@@ -14,10 +14,12 @@ public class NewStaff : MonoBehaviour
     [SerializeField] private TrailRenderer trailRenderer;
     [SerializeField] private float delay;
     [SerializeField] private LayerMask mask;
+
     [Header("----- Melee Stuff -----")]
     [SerializeField] private float meleeCooldown;
     [SerializeField] Collider hitbox;
-    [SerializeField] private Renderer sWeapon;
+    [SerializeField] GameObject[] weaponModels;
+    
 
     public enum Element
     {
@@ -25,11 +27,15 @@ public class NewStaff : MonoBehaviour
         Water,
         Earth
     }
+<<<<<<< HEAD
     [SerializeField] public Element element;
+=======
+    public Element playerElement;
 
-    //[SerializeField] Animator anim;
+    PlayerController player;
+>>>>>>> branchworks
+
     private float lastShootTime;
-    //private float timer;
     public bool isShooting;
     public bool canMelee;
     public GameObject weapon;
@@ -38,29 +44,28 @@ public class NewStaff : MonoBehaviour
     private void Awake()
     {
         hitbox.enabled = false;
-        sWeapon.enabled = false;
+    }
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isAttacking)
+        if (playerElement != player.playerElement)
         {
-            sWeapon.enabled = true;
+            SetElement();
         }
-        else
-        {
-            sWeapon.enabled = false;
-        }
-        //Shoot();
         Melee();
     }
 
     public void Shoot(float shootRate)
     {
-
+        Debug.Log("Weapon Shoot Called");
         if (Input.GetButton("Shoot"))
         {
+
             isShooting = true;
             canMelee = false;
             if (lastShootTime + delay < Time.time)
@@ -118,30 +123,31 @@ public class NewStaff : MonoBehaviour
 
     public void Melee()
     {
-        if (!canMelee)
+        if (canMelee && Input.GetMouseButtonDown(1))
         {
-            return;
-        }
-
-
-        if (Input.GetMouseButtonDown(1))
-        {
+            canMelee = false;
             isAttacking = true;
             hitbox.enabled = true;
-            canMelee = false;
             Animator anim = weapon.GetComponent<Animator>();
-            switch (element)
+
+            weaponModels[0].SetActive(false);
+            switch (playerElement)
             {
                 case Element.Fire:
+                    Debug.Log("Melee Fire");
+                    weaponModels[1].SetActive(true);
                     anim.SetTrigger("SwordMelee");
                     break;
                 case Element.Water:
+                    weaponModels[2].SetActive(true);
                     anim.SetTrigger("SpearMelee");
                     break;
                 case Element.Earth:
+                    weaponModels[3].SetActive(true);
                     anim.SetTrigger("HammerMelee");
                     break;
             }
+
             StartCoroutine(ResetMeleeCooldown());
         }
     }
@@ -150,9 +156,7 @@ public class NewStaff : MonoBehaviour
         yield return new WaitForSeconds(meleeCooldown);
         canMelee = true;
         isAttacking = false;
-        yield return new WaitForSeconds(1);
         hitbox.enabled = false;
-        canMelee = true;
     }
 
     IEnumerator ResetShooting()
@@ -162,13 +166,16 @@ public class NewStaff : MonoBehaviour
         canMelee = true;
     }
 
-    IEnumerator Wait(float seconds)
+    public void SetElement()
     {
-        yield return new WaitForSeconds(seconds);
+        playerElement = player.playerElement;
     }
 
-    public int GetElement()
+    public void ResetMeleeWeaponModel()
     {
-        return (int)element;
+        weaponModels[0].SetActive(true);
+        weaponModels[1].SetActive(false);
+        weaponModels[2].SetActive(false);
+        weaponModels[3].SetActive(false);
     }
 }

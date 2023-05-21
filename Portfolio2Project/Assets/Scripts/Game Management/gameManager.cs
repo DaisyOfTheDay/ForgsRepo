@@ -18,10 +18,14 @@ public class gameManager : MonoBehaviour
     public GameObject playerRespawn;
     public GameObject playerSpawn;
     public Skills skillScript;
+<<<<<<< HEAD
     /*public GameObject firePlayer;
     public GameObject waterPlayer;
     public GameObject earthPlayer;*/
 
+=======
+    NewStaff.Element playerElement;
+>>>>>>> branchworks
 
     [Header("----- UI Stuff -----")]
     public GameObject pauseMenu;
@@ -41,12 +45,19 @@ public class gameManager : MonoBehaviour
     [SerializeField] Text hpText;
     [SerializeField] TextMeshProUGUI levelText;
     LevelManager levelManager;
+<<<<<<< HEAD
+=======
+    [SerializeField] int fadeIntensity;
+    int currentFade;
+
+>>>>>>> branchworks
     public Image ability1; //Hi-Jump
     public Image ability2; //Dash
     public Image ability3; //Blink
     public Image fadeOutImage;
     public List<Sprite> spriteArray;
     public Image element;
+    public bool fadeIn;
 
     public bool isPaused;
     float timeScaleOrig;
@@ -55,13 +66,26 @@ public class gameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        levelManager = LevelManager.instance;
         player = GameObject.FindGameObjectWithTag("Player");
-        timeScaleOrig = Time.timeScale;
         playerScript = player.GetComponent<PlayerController>();
         skillScript = player.GetComponent<Skills>();
+<<<<<<< HEAD
         //playerRespawn = GameObject.FindGameObjectWithTag("PlayerRespawn");
         levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
         ResetHpBar();
+=======
+        ResetHpBar();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        timeScaleOrig = Time.timeScale;
+        fadeIn = false;
+        currentFade = 0;
+    }
+
+    private void Start()
+    {
+>>>>>>> branchworks
         SetElementIcon();
         enemiesRemaining = 0;
     }
@@ -69,18 +93,32 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
         SetElementIcon();
+=======
+        //StartCoroutine(FadeScreen(fadeIn));
+
+>>>>>>> branchworks
         if (Input.GetButtonDown("Cancel") && activeMenu == null)
         {
             activeMenu = pauseMenu;
             showActiveMenu();
             pauseState();
         }
+<<<<<<< HEAD
         if (instance.enemiesRemaining <= 0 && levelManager.isInLevel)
         {
             levelManager.levelComplete();
         }
         abilityCooldown();
+=======
+        AbilityCoolDown();
+
+        if (playerElement != playerScript.playerElement)
+        {
+            SetElement();
+        }
+>>>>>>> branchworks
     }
 
     public void pauseState()
@@ -162,7 +200,7 @@ public class gameManager : MonoBehaviour
     public void SetElementIcon()
     {
         //Debug.Log(playerScript.GetWeapon());
-        element.sprite = spriteArray[playerScript.GetWeapon()];
+        element.sprite = spriteArray[(int) playerScript.playerElement];
     }
 
     public void UpdateHealthBar()
@@ -230,25 +268,50 @@ public class gameManager : MonoBehaviour
         hpText.text = "HP: " + playerScript.getHealth();
     }
 
+<<<<<<< HEAD
     IEnumerator fadeScreen(bool toFade)
+=======
+    public IEnumerator FadeScreen(bool toFadeIn)
+>>>>>>> branchworks
     {
-       if(toFade)   //Fade into level
+       if(toFadeIn == true)   //Fade into level
         {
-            for(float i = 1; i>=0;i-=Time.deltaTime)
+            if (currentFade < 255)
             {
+<<<<<<< HEAD
                 fadeOutImage.color = new Color(1, 1, 1, i);
                 yield return null;
+=======
+                fadeInFadeOutImage.color = new Color(0, 0, 0, currentFade);
+                currentFade += fadeIntensity;
+>>>>>>> branchworks
             }
+            else
+            {
+                currentFade = 255;
+            }
+            yield return null;
         }
         else           //Fade out of level
         {
-            for (float i = 0; i <= 1; i += Time.deltaTime)
+            if (currentFade > 0)
             {
+<<<<<<< HEAD
                 fadeOutImage.color = new Color(1, 1, 1, i);
                 yield return null;
+=======
+                fadeInFadeOutImage.color = new Color(0, 0, 0, currentFade);
+                currentFade -= fadeIntensity;
+>>>>>>> branchworks
             }
+            else
+            {
+                currentFade = 0;
+            }
+            yield return null;
         }
     }
+<<<<<<< HEAD
 
     //public void StartGame()
     //{
@@ -285,4 +348,10 @@ public class gameManager : MonoBehaviour
     //{
 
     //}
+=======
+    public void SetElement()
+    {
+        playerElement = playerScript.playerElement;
+    }
+>>>>>>> branchworks
 }

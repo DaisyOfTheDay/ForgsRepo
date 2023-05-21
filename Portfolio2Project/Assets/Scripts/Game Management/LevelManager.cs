@@ -9,10 +9,14 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Animator doorAnim;
     [SerializeField] GameObject doorLight;
 
+<<<<<<< HEAD
 
     [Header("-----Levels------")]
     [SerializeField] Transform tutorialLevel;
     [SerializeField] Transform[] levelPrefabs;
+=======
+    public static LevelManager instance;
+>>>>>>> branchworks
 
     [Header("-----Balance-----")]
     [Range(5,30)][SerializeField] int baseEnemyCount = 10;
@@ -49,8 +53,13 @@ public class LevelManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+<<<<<<< HEAD
 
         if (other.CompareTag("Player") && !inElevator) 
+=======
+        GameManager.instance.UpdateLevelCount();
+        if (loadingLevel == false)
+>>>>>>> branchworks
         {
             if (levelIsComplete)
             {
@@ -67,7 +76,29 @@ public class LevelManager : MonoBehaviour
 
         }
 
+<<<<<<< HEAD
 
+=======
+    }
+    
+    public void NewGame()
+    {
+        loadingLevel = false;
+        levelCompleted = false;
+        levelStarted = false;
+        currentLevel = 1;
+        enemiesRemaining = 0;
+        inElevator = false;
+
+    }
+
+    public void NewLevel()
+    {
+        levelCompleted = false;
+        levelStarted = false;
+        enemiesRemaining = 0;
+        inElevator = false;
+>>>>>>> branchworks
     }
 
     private void OnTriggerExit(Collider other)
@@ -75,6 +106,7 @@ public class LevelManager : MonoBehaviour
 <<<<<<< HEAD
         if (levelStarted == true && enemiesRemaining <= 0) //if level is started and all enemies are dead level is considered completed
         {
+<<<<<<< HEAD
             Debug.Log("levelStarted True + enemies < 0");
             levelCompleted = true;
             if (inElevator == true) //if level is completed and player enters elevator go to next level
@@ -86,6 +118,12 @@ public class LevelManager : MonoBehaviour
             {
                 StopCoroutine(activeCoroutine);
 
+=======
+            if(levelCompleted == false)
+            {
+                Debug.Log("levelStarted True + enemies < 0, level is completed");
+                levelCompleted = true;
+>>>>>>> branchworks
             }
             else
             {
@@ -164,8 +202,9 @@ public class LevelManager : MonoBehaviour
     }
     public void GoToNextLevel() //if levelStarted, no enemies, and player in elevator -> load new level
     {
-        if (loadingLevel == false)
+        if (GameManager.instance != null)
         {
+<<<<<<< HEAD
             loadingLevel = true;
             levelCompleted = false;
             levelStarted = false;
@@ -184,10 +223,18 @@ public class LevelManager : MonoBehaviour
         }
         gameManager.instance.updateLevelCount();
 
+=======
+            GameManager.instance.fadeIn = true;
+        }
+        NewLevel();
+        SceneManager.LoadScene(GetRandomLevelIndex()); //loads a new level != the current level index
+        ++currentLevel; //ups difficulty
+>>>>>>> branchworks
     }
 
     int scaledDifficulty()
     {
+<<<<<<< HEAD
         return (int)Mathf.Round(baseEnemyCount * (1 +(level * byLevelMultiplier)));
     }
 
@@ -209,5 +256,14 @@ public class LevelManager : MonoBehaviour
         {
             levelComplete();
         }
+=======
+        int randomIndex = Random.Range(repeatableLevelsMinIndex, repeatableLevelsMaxIndex + 1);
+        while (randomIndex == SceneManager.GetActiveScene().buildIndex)
+        {
+            randomIndex = Random.Range(repeatableLevelsMinIndex, repeatableLevelsMaxIndex + 1);
+        }
+        Debug.Log($"Random Index is {randomIndex}");
+        return randomIndex;
+>>>>>>> branchworks
     }
 }
