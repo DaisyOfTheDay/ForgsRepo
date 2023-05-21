@@ -9,7 +9,6 @@ public class PlayerSpawn : MonoBehaviour
 
     LevelManager levelManager;
     bool playerInSpawn;
-
     private void Start()
     {
         levelManager = LevelManager.instance;

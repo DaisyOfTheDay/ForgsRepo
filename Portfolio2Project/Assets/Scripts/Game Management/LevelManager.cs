@@ -74,13 +74,9 @@ public class LevelManager : MonoBehaviour
     {
 <<<<<<< HEAD
         if (levelStarted == true && enemiesRemaining <= 0) //if level is started and all enemies are dead level is considered completed
-        {            
-            if(levelCompleted == false)
-            {
-                Debug.Log("levelStarted True + enemies < 0");
-                levelCompleted = true;
-            }
-
+        {
+            Debug.Log("levelStarted True + enemies < 0");
+            levelCompleted = true;
             if (inElevator == true) //if level is completed and player enters elevator go to next level
 =======
         if (other.CompareTag("Player"))
@@ -170,11 +166,11 @@ public class LevelManager : MonoBehaviour
     {
         if (loadingLevel == false)
         {
-            //loadingLevel = true;
-            //levelCompleted = false;
-            //levelStarted = false;
-            //enemiesRemaining = 0;
-            //inElevator = false;
+            loadingLevel = true;
+            levelCompleted = false;
+            levelStarted = false;
+            enemiesRemaining = 0;
+            inElevator = false;
             lastLevelIndex = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(GetRandomLevelIndex()); //loads a new level != the current level index
             SceneManager.UnloadSceneAsync(lastLevelIndex);
