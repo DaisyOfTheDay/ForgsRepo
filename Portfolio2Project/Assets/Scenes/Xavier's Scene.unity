@@ -123,13 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+<<<<<<< HEAD
 --- !u!1001 &150376277
+=======
+--- !u!1001 &223203290
+>>>>>>> parent of ecf7e4e (Separated Player Prefabs)
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+<<<<<<< HEAD
     - target: {fileID: 1785945019915391827, guid: 3a08d37518629ef4c8e20a35f764c8a7, type: 3}
       propertyPath: m_Name
       value: AbilityChanger(HiJump)
@@ -237,6 +242,62 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53bd385534096f64189df827281dc346, type: 3}
+=======
+    - target: {fileID: 334106367046308170, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: element
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.4317627
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.2582521
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243926, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6256373690464243930, guid: 45de30749b3650d43830070e711739ef, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 45de30749b3650d43830070e711739ef, type: 3}
+>>>>>>> parent of ecf7e4e (Separated Player Prefabs)
 --- !u!1 &276203848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,6 +1092,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+<<<<<<< HEAD
 --- !u!1001 &1811572201
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1332,3 +1394,5 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfd66fdd05b016643a2445fcdf37d0d1, type: 3}
+=======
+>>>>>>> parent of ecf7e4e (Separated Player Prefabs)
