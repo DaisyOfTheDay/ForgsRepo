@@ -22,13 +22,4 @@ public class NearElevator : MonoBehaviour
             door2.SetActive(false);
         }
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            door1.SetActive(true);
-            door2.SetActive(true);
-        }
-    }
 }
